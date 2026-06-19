@@ -1,0 +1,12 @@
+package com.property.repository;
+
+import com.property.entity.PaymentRecord;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface PaymentRecordRepository extends JpaRepository<PaymentRecord, Long> {
+    List<PaymentRecord> findByBillId(Long billId);
+}
