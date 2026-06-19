@@ -1,0 +1,48 @@
+{
+  "pages": [
+    {"path": "pages/owner/index", "style": {"navigationBarTitleText": "智慧物业"}},
+    {"path": "pages/owner/messages", "style": {"navigationBarTitleText": "管家消息"}},
+    {"path": "pages/owner/fee", "style": {"navigationBarTitleText": "物业缴费"}},
+    {"path": "pages/owner/repair", "style": {"navigationBarTitleText": "报事报修"}},
+    {"path": "pages/owner/repair-detail", "style": {"navigationBarTitleText": "报修详情"}},
+    {"path": "pages/owner/visitor", "style": {"navigationBarTitleText": "访客通行"}},
+    {"path": "pages/owner/notices", "style": {"navigationBarTitleText": "小区公告"}},
+    {"path": "pages/owner/convenience", "style": {"navigationBarTitleText": "便民服务"}},
+    {"path": "pages/owner/profile", "style": {"navigationBarTitleText": "个人中心"}},
+
+    {"path": "pages/employee/index", "style": {"navigationBarTitleText": "员工工作台"}},
+    {"path": "pages/employee/repair-list", "style": {"navigationBarTitleText": "报修工单"}},
+    {"path": "pages/employee/repair-handle", "style": {"navigationBarTitleText": "处理报修"}},
+    {"path": "pages/employee/visitor-audit", "style": {"navigationBarTitleText": "访客审核"}},
+    {"path": "pages/employee/schedule", "style": {"navigationBarTitleText": "工作日程"}},
+    {"path": "pages/employee/tool-manage", "style": {"navigationBarTitleText": "工具管理"}},
+
+    {"path": "pages/login", "style": {"navigationBarTitleText": "登录"}}
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "智慧物业",
+    "navigationBarBackgroundColor": "#2B85E4",
+    "backgroundColor": "#F5F6FA",
+    "usingComponents": true
+  },
+  "easycom":{
+  "autoscan":true,
+  "custom":{
+    "^uni-(.*)":
+    "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+  }
+},
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#2B85E4",
+    "backgroundColor": "#fff",
+    "borderStyle": "black",
+    "list": [
+      {"pagePath": "pages/owner/index", "text": "首页", "iconPath": "static/tab-home.png", "selectedIconPath": "static/tab-home-active.png"},
+      {"pagePath": "pages/owner/messages", "text": "消息", "iconPath": "static/tab-msg.png", "selectedIconPath": "static/tab-msg-active.png"},
+      {"pagePath": "pages/owner/repair", "text": "报修", "iconPath": "static/tab-repair.png", "selectedIconPath": "static/tab-repair-active.png"},
+      {"pagePath": "pages/owner/profile", "text": "我的", "iconPath": "static/tab-me.png", "selectedIconPath": "static/tab-me-active.png"}
+    ]
+  }
+}

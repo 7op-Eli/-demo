@@ -1,0 +1,22 @@
+{
+  "name": "智慧物业",
+  "appid": "__UNI__PROPERTY_MGMT",
+  "description": "智慧物业管理系统",
+  "versionName": "1.0.0",
+  "versionCode": "100",
+  "transformPx": false,
+  "app-plus": {},
+  "quickapp": {},
+  "mp-weixin": {
+    "appid": "your-wechat-appid",
+    "setting": {
+      "urlCheck": false,
+      "es6": true,
+      "postcss": true,
+      "minified": true
+    },
+    "usingComponents": true,
+    "permission": {}
+  },
+  "uniStatistics": { "enable": false }
+}

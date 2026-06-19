@@ -1,0 +1,48 @@
+/* 全局样式变量 */
+$primary-color: #2B85E4;
+$success-color: #19BE6B;
+$warning-color: #FF9900;
+$danger-color: #ED3F14;
+$bg-color: #F5F6FA;
+$card-bg: #FFFFFF;
+$text-primary: #333333;
+$text-secondary: #666666;
+$text-light: #999999;
+$border-color: #EEEEEE;
+
+/* 通用样式 */
+page {
+  background-color: $bg-color;
+  font-size: 28rpx;
+  color: $text-primary;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+}
+
+.card {
+  background: $card-bg;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin: 20rpx 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #2B85E4, #5CADFF);
+  color: #fff;
+  border: none;
+  border-radius: 40rpx;
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+}
+
+.tag {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+}
+.tag-blue { background: #E8F4FD; color: #2B85E4; }
+.tag-green { background: #E8F8EF; color: #19BE6B; }
+.tag-orange { background: #FFF3E0; color: #FF9900; }
+.tag-red { background: #FDECEA; color: #ED3F14; }
+.tag-gray { background: #F5F5F5; color: #999; }

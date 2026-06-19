@@ -1,0 +1,40 @@
+
+.detail-page.data-v-79e82a68 { padding: 20rpx 0 40rpx;
+}
+.detail-header.data-v-79e82a68 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20rpx;
+}
+.order-no.data-v-79e82a68 { font-size: 28rpx; font-weight: bold;
+}
+.section-title.data-v-79e82a68 { font-size: 30rpx; font-weight: bold; margin-bottom: 20rpx;
+}
+.info-row.data-v-79e82a68 { display: flex; padding: 10rpx 0; font-size: 26rpx;
+}
+.info-row .key.data-v-79e82a68 { color: #999; width: 140rpx;
+}
+.info-row .val.data-v-79e82a68 { color: #333; flex: 1;
+}
+.log-item.data-v-79e82a68 { display: flex; margin-bottom: 24rpx;
+}
+.log-dot.data-v-79e82a68 { width: 16rpx; height: 16rpx; border-radius: 50%; background: #2B85E4; margin-top: 8rpx; margin-right: 20rpx;
+}
+.log-body.data-v-79e82a68 { flex: 1;
+}
+.log-action.data-v-79e82a68 { font-size: 26rpx; font-weight: bold; display: block;
+}
+.log-content.data-v-79e82a68 { font-size: 24rpx; color: #666; display: block; margin-top: 4rpx;
+}
+.log-time.data-v-79e82a68 { font-size: 20rpx; color: #bbb; display: block; margin-top: 4rpx;
+}
+.star-row.data-v-79e82a68, .star-display.data-v-79e82a68 { margin-bottom: 16rpx;
+}
+.star.data-v-79e82a68 { font-size: 50rpx; color: #ddd; margin-right: 10rpx;
+}
+.star.active.data-v-79e82a68 { color: #FF9900;
+}
+.eval-input.data-v-79e82a68 { width: 100%; min-height: 120rpx; border: 2rpx solid #eee; border-radius: 12rpx; padding: 16rpx; font-size: 26rpx; margin-bottom: 20rpx;
+}
+.eval-comment.data-v-79e82a68 { font-size: 26rpx; color: #666;
+}
+.empty.data-v-79e82a68 { text-align: center; color: #999; padding: 30rpx 0; font-size: 24rpx;
+}
+

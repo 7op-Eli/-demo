@@ -1,0 +1,61 @@
+{
+  "pages": [
+    "pages/owner/index",
+    "pages/owner/messages",
+    "pages/owner/fee",
+    "pages/owner/repair",
+    "pages/owner/repair-detail",
+    "pages/owner/visitor",
+    "pages/owner/notices",
+    "pages/owner/convenience",
+    "pages/owner/profile",
+    "pages/employee/index",
+    "pages/employee/repair-list",
+    "pages/employee/repair-handle",
+    "pages/employee/visitor-audit",
+    "pages/employee/schedule",
+    "pages/employee/tool-manage",
+    "pages/login"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "智慧物业",
+    "navigationBarBackgroundColor": "#2B85E4",
+    "backgroundColor": "#F5F6FA"
+  },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#2B85E4",
+    "backgroundColor": "#fff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/owner/index",
+        "text": "首页",
+        "iconPath": "static/tab-home.png",
+        "selectedIconPath": "static/tab-home-active.png"
+      },
+      {
+        "pagePath": "pages/owner/messages",
+        "text": "消息",
+        "iconPath": "static/tab-msg.png",
+        "selectedIconPath": "static/tab-msg-active.png"
+      },
+      {
+        "pagePath": "pages/owner/repair",
+        "text": "报修",
+        "iconPath": "static/tab-repair.png",
+        "selectedIconPath": "static/tab-repair-active.png"
+      },
+      {
+        "pagePath": "pages/owner/profile",
+        "text": "我的",
+        "iconPath": "static/tab-me.png",
+        "selectedIconPath": "static/tab-me-active.png"
+      }
+    ]
+  },
+  "permission": {},
+  "usingComponents": {}
+}

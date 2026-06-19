@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "小区公告",
+  "usingComponents": {
+    "uni-popup": "/node-modules/@dcloudio/uni-ui/lib/uni-popup/uni-popup"
+  }
+}

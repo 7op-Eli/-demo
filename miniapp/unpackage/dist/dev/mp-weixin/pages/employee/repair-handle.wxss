@@ -1,0 +1,40 @@
+
+.repair-handle.data-v-b6507200 { padding-bottom: 40rpx;
+}
+.detail-header.data-v-b6507200 { display: flex; justify-content: space-between; margin-bottom: 16rpx;
+}
+.order-title.data-v-b6507200 { font-size: 30rpx; font-weight: bold;
+}
+.info-row.data-v-b6507200 { display: flex; padding: 8rpx 0; font-size: 26rpx;
+}
+.info-row .key.data-v-b6507200 { color: #999; width: 100rpx;
+}
+.info-row .val.data-v-b6507200 { color: #333; flex: 1;
+}
+.action-btns.data-v-b6507200 { margin-top: 24rpx;
+}
+.action-btn.data-v-b6507200 { width: 100%; margin-top: 12rpx; background: #2B85E4; color: #fff; border: none; border-radius: 40rpx; padding: 18rpx; font-size: 28rpx;
+}
+.action-btn.green.data-v-b6507200 { background: #19BE6B;
+}
+.input.data-v-b6507200 { width: 100%; border: 2rpx solid #eee; border-radius: 12rpx; padding: 14rpx 18rpx; font-size: 26rpx; margin-bottom: 10rpx; background: #FAFAFA;
+}
+.textarea.data-v-b6507200 { min-height: 100rpx;
+}
+.section-title.data-v-b6507200 { font-size: 28rpx; font-weight: bold; margin-bottom: 16rpx;
+}
+.log-item.data-v-b6507200 { display: flex; margin-bottom: 20rpx;
+}
+.log-dot.data-v-b6507200 { width: 14rpx; height: 14rpx; border-radius: 50%; background: #2B85E4; margin-top: 6rpx; margin-right: 16rpx;
+}
+.log-body.data-v-b6507200 { flex: 1;
+}
+.log-action.data-v-b6507200 { font-size: 26rpx; font-weight: bold; display: block;
+}
+.log-content.data-v-b6507200 { font-size: 24rpx; color: #666; display: block;
+}
+.log-time.data-v-b6507200 { font-size: 20rpx; color: #bbb; display: block;
+}
+.empty.data-v-b6507200 { text-align: center; color: #999; padding: 30rpx;
+}
+
