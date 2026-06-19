@@ -33,7 +33,14 @@ request.interceptors.response.use(
     return Promise.reject(new Error(res.msg))
   },
   error => {
-    ElMessage.error(error.message || '网络异常')
+    // 优先展示后端返回的业务提示（如「用户名或密码错误」），否则回退到通用文案
+    const res = error.response && error.response.data
+    ElMessage.error((res && res.msg) || error.message || '网络异常')
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('admin-token')
+      localStorage.removeItem('admin-user')
+      router.push('/login')
+    }
     return Promise.reject(error)
   }
 )

@@ -1,0 +1,32 @@
+# ===== 依赖 =====
+node_modules/
+
+# ===== 构建产物 =====
+# 后端 Maven
+target/
+# 前端
+dist/
+.vite/
+# uni-app 小程序编译产物
+unpackage/
+
+# ===== IDE / 编辑器 =====
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# ===== 日志 =====
+*.log
+logs/
+
+# ===== 本地环境 / 密钥 =====
+.env
+.env.local
+*.local
+
+# ===== 操作系统 =====
+.DS_Store
+Thumbs.db
+desktop.ini
