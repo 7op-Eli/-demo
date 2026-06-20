@@ -30,10 +30,19 @@ public class ButlerController {
     @Operation(summary = "获取房间消息列表")
     @GetMapping("/messages")
     public Result<PageResult<ButlerMessage>> getMessages(
-            @RequestParam Long roomId,
+            @CurrentUser SysUser user,
+            @RequestParam(required = false) Long roomId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size) {
-        Page<ButlerMessage> result = butlerService.getMessages(roomId, PageRequest.of(page - 1, size));
+        // IDOR fix: owners can only see their own room messages;
+        // employees/admins can view any room's messages
+        Long effectiveRoomId;
+        if (user.getRoleType() == com.property.common.Constants.ROLE_OWNER) {
+            effectiveRoomId = user.getOwnerId();
+        } else {
+            effectiveRoomId = roomId;
+        }
+        Page<ButlerMessage> result = butlerService.getMessages(effectiveRoomId, PageRequest.of(page - 1, size));
         return Result.success(PageResult.of(result, result.getContent()));
     }
 

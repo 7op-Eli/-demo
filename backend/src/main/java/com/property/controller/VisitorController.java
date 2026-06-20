@@ -25,10 +25,11 @@ public class VisitorController {
     @Operation(summary = "业主获取访客记录")
     @GetMapping("/my-visitors")
     public Result<PageResult<Visitor>> getMyVisitors(
-            @RequestParam Long ownerId,
+            @CurrentUser SysUser user,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Page<Visitor> result = visitorService.getVisitorsByOwner(ownerId,
+        // IDOR fix: derive ownerId from authenticated user, not request param
+        Page<Visitor> result = visitorService.getVisitorsByOwner(user.getOwnerId(),
                 PageRequest.of(page - 1, size));
         return Result.success(PageResult.of(result, result.getContent()));
     }

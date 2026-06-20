@@ -27,6 +27,15 @@
           </template>
         </el-table-column>
       </el-table>
+      <div style="margin-top: 16px; display: flex; justify-content: flex-end">
+        <el-pagination
+          v-model:current-page="ownerPage"
+          :page-size="ownerSize"
+          :total="ownerTotal"
+          layout="total, prev, pager, next"
+          @current-change="loadData"
+        />
+      </div>
     </el-card>
 
     <!-- 新增/编辑弹窗 -->
@@ -58,12 +67,19 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { getOwners, createOwner, updateOwner, deleteOwner } from '../api/admin'
 
 const owners = ref([])
+const ownerPage = ref(1)
+const ownerSize = ref(20)
+const ownerTotal = ref(0)
 const showDialog = ref(false)
 const editingId = ref(null)
 const form = ref({ name: '', phone: '', idCard: '', roomId: 1, ownerType: 1 })
 
 const loadData = async () => {
-  try { owners.value = await getOwners() || [] } catch (e) {}
+  try {
+    const res = await getOwners(ownerPage.value, ownerSize.value)
+    owners.value = res?.list || []
+    ownerTotal.value = res?.total || 0
+  } catch (e) {}
 }
 
 const handleEdit = (row) => {

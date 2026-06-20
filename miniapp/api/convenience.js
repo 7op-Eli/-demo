@@ -9,8 +9,13 @@ export const getTools = () =>
 export const borrowTool = (data) =>
   post('/convenience/tools/borrow', data)
 
-export const getUsageRecords = (ownerId, page = 1) =>
-  get('/convenience/usage-records', { ownerId, page, size: 10 })
+// For owners: ownerId derived server-side from auth token (IDOR fix)
+// For employees/admins: pass ownerId as second arg
+export const getUsageRecords = (page = 1, ownerId = null) => {
+  const params = { page, size: 10 }
+  if (ownerId != null) params.ownerId = ownerId
+  return get('/convenience/usage-records', params)
+}
 
 export const submitEvaluation = (data) =>
   post('/convenience/evaluations', data)

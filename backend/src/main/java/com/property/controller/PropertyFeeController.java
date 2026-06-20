@@ -51,12 +51,17 @@ public class PropertyFeeController {
     @Operation(summary = "获取业主账单")
     @GetMapping("/bills")
     public Result<PageResult<PropertyFeeBill>> getBills(
+            @CurrentUser SysUser user,
             @RequestParam(required = false) Long ownerId,
             @RequestParam(required = false) Integer status,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
+        // IDOR fix: owners can only see their own bills;
+        // employees/admins can query by any ownerId
         Page<PropertyFeeBill> result;
-        if (ownerId != null) {
+        if (user.getRoleType() == com.property.common.Constants.ROLE_OWNER) {
+            result = feeService.getBillsByOwner(user.getOwnerId(), PageRequest.of(page - 1, size));
+        } else if (ownerId != null) {
             result = feeService.getBillsByOwner(ownerId, PageRequest.of(page - 1, size));
         } else if (status != null) {
             result = feeService.getBillsByStatus(status, PageRequest.of(page - 1, size));

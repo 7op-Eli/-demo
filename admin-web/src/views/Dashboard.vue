@@ -7,7 +7,7 @@
             <el-icon :size="24"><component :is="card.icon" /></el-icon>
           </div>
           <div class="stat-info">
-            <span class="stat-num">{{ card.value }}</span>
+            <span class="stat-num">{{ dashboardData[card.key] }}</span>
             <span class="stat-label">{{ card.label }}</span>
           </div>
         </el-card>
@@ -44,13 +44,23 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
 import { User, HomeFilled, WarningFilled, SuccessFilled } from '@element-plus/icons-vue'
+import { getDashboard } from '../api/admin'
+
+const dashboardData = ref({ totalOwners: 0, totalEmployees: 0, pendingRepairs: 0, pendingVisitors: 0 })
+
+onMounted(async () => {
+  try {
+    dashboardData.value = await getDashboard()
+  } catch (e) { /* keep defaults on error */ }
+})
 
 const stats = [
-  { label: '业主总数', value: 128, icon: 'User', color: '#409EFF' },
-  { label: '待处理报修', value: 5, icon: 'WarningFilled', color: '#E6A23C' },
-  { label: '已缴清账单', value: 86, icon: 'SuccessFilled', color: '#67C23A' },
-  { label: '待审核访客', value: 3, icon: 'User', color: '#F56C6C' }
+  { label: '业主总数', key: 'totalOwners', icon: 'User', color: '#409EFF' },
+  { label: '员工总数', key: 'totalEmployees', icon: 'User', color: '#67C23A' },
+  { label: '待处理报修', key: 'pendingRepairs', icon: 'WarningFilled', color: '#E6A23C' },
+  { label: '待审核访客', key: 'pendingVisitors', icon: 'User', color: '#F56C6C' }
 ]
 
 const quickActions = [

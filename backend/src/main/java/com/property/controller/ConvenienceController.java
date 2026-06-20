@@ -3,6 +3,7 @@ package com.property.controller;
 import com.property.common.PageResult;
 import com.property.common.Result;
 import com.property.entity.*;
+import com.property.security.CurrentUser;
 import com.property.service.ConvenienceServiceMgmt;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -78,9 +79,17 @@ public class ConvenienceController {
     @Operation(summary = "业主借用记录")
     @GetMapping("/usage-records")
     public Result<PageResult<ToolUsageRecord>> getUsageRecords(
+            @CurrentUser SysUser user,
             @RequestParam(required = false) Long ownerId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
+        // IDOR fix: owners can only see their own records;
+        // employees/admins can query by any ownerId or see all active records
+        if (user.getRoleType() == com.property.common.Constants.ROLE_OWNER) {
+            Page<ToolUsageRecord> result = convenienceService.getUsageRecordsByOwner(user.getOwnerId(),
+                    PageRequest.of(page - 1, size));
+            return Result.success(PageResult.of(result, result.getContent()));
+        }
         if (ownerId != null) {
             Page<ToolUsageRecord> result = convenienceService.getUsageRecordsByOwner(ownerId,
                     PageRequest.of(page - 1, size));

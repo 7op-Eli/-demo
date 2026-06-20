@@ -77,7 +77,7 @@ export default {
   methods: {
     async loadBills() {
       try {
-        const res = await getBills(this.userInfo.ownerId, 1)
+        const res = await getBills(1)
         this.bills = res.list || []
         this.unpaidCount = this.bills.filter(b => b.status === 0).length
         this.paidCount = this.bills.filter(b => b.status === 2).length

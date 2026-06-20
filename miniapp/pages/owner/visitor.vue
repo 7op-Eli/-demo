@@ -67,7 +67,7 @@ export default {
   methods: {
     async loadVisitors() {
       try {
-        const res = await getMyVisitors(this.userInfo.ownerId, 1)
+        const res = await getMyVisitors(1)
         this.visitors = res.list || []
       } catch (e) { /* ignore */ }
     },

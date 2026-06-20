@@ -5,6 +5,7 @@ server:
 
 spring:
   datasource:
+    # TODO: security — move DB credentials to environment variables (e.g. ${DB_USERNAME}, ${DB_PASSWORD})
     url: jdbc:mysql://localhost:3306/property_management?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: 200558
@@ -42,6 +43,8 @@ spring:
     default-property-inclusion: non_null
 
 # JWT
+# TODO: security — move jwt.secret to environment variable (e.g. ${JWT_SECRET})
+# and never commit real secrets to version control.
 jwt:
   secret: PROPERTY_MGMT_SECRET_KEY_2024_CHANGE_IN_PROD
   expiration: 86400000  # 24小时

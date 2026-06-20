@@ -39,6 +39,8 @@ if (uri.equals("/api/auth/login")) {
 
         if (StringUtils.hasText(token) && jwtUtil.validateToken(token)) {
             Long userId = jwtUtil.getUserIdFromToken(token);
+            // TODO: performance — loadUserById() hits DB on every request.
+            // Consider caching SysUser in Redis (keyed by userId) with a TTL equal to token expiration.
             var userDetails = userDetailsService.loadUserById(userId);
 
             UsernamePasswordAuthenticationToken authentication =

@@ -105,7 +105,7 @@ export default {
       try {
         const ownerId = this.userInfo.ownerId
         if (ownerId) {
-          const bills = await getBills(ownerId, 1) || { list: [] }
+          const bills = await getBills(1) || { list: [] }
           this.pendingBills = bills.list.filter(b => b.status === 0).length
         }
       } catch (e) { /* ignore */ }

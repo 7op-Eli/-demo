@@ -1,7 +1,8 @@
 import { get, post, put } from '../utils/request'
 
-export const getMyOrders = (ownerId, page = 1) =>
-  get('/repair/my-orders', { ownerId, page, size: 10 })
+// ownerId is now derived server-side from auth token (IDOR fix)
+export const getMyOrders = (page = 1) =>
+  get('/repair/my-orders', { page, size: 10 })
 
 export const getOrderDetail = (id) =>
   get(`/repair/orders/${id}`)

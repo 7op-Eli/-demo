@@ -1,14 +1,14 @@
 import { get, post, put, del } from '../utils/request'
 
 // ===== 业主 =====
-export const getOwners = () => get('/admin/owners')
+export const getOwners = (page = 1, size = 20) => get('/admin/owners', { page, size })
 export const getOwner = (id) => get(`/admin/owners/${id}`)
 export const createOwner = (data) => post('/admin/owners', data)
 export const updateOwner = (id, data) => put(`/admin/owners/${id}`, data)
 export const deleteOwner = (id) => del(`/admin/owners/${id}`)
 
 // ===== 楼栋 =====
-export const getBuildings = () => get('/admin/buildings')
+export const getBuildings = (page = 1, size = 20) => get('/admin/buildings', { page, size })
 export const createBuilding = (data) => post('/admin/buildings', data)
 export const updateBuilding = (id, data) => put(`/admin/buildings/${id}`, data)
 
@@ -18,8 +18,11 @@ export const createRoom = (data) => post('/admin/rooms', data)
 export const updateRoom = (id, data) => put(`/admin/rooms/${id}`, data)
 
 // ===== 员工 =====
-export const getEmployees = () => get('/admin/employees')
+export const getEmployees = (page = 1, size = 20) => get('/admin/employees', { page, size })
 export const createEmployee = (data) => post('/admin/employees', data)
+
+// ===== 仪表盘 =====
+export const getDashboard = () => get('/admin/dashboard')
 
 // ===== 通知 =====
 export const getNotices = (params) => get('/notices', params)

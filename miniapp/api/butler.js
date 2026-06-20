@@ -1,7 +1,12 @@
 import { get, post, put } from '../utils/request'
 
-export const getMessages = (roomId, page = 1) =>
-  get('/butler/messages', { roomId, page, size: 20 })
+// For owners: roomId derived server-side from auth token (IDOR fix)
+// For employees/admins: pass roomId as second arg
+export const getMessages = (page = 1, roomId = null) => {
+  const params = { page, size: 20 }
+  if (roomId != null) params.roomId = roomId
+  return get('/butler/messages', params)
+}
 
 export const sendMessage = (data) =>
   post('/butler/messages', data)

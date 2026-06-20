@@ -42,7 +42,7 @@ export default {
   methods: {
     async loadMessages() {
       try {
-        const res = await getMessages(this.userInfo.ownerId || 1, 1)
+        const res = await getMessages(1)
         this.messages = res.list || []
       } catch (e) { /* ignore */ }
     },
