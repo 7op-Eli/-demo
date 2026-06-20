@@ -77,7 +77,7 @@ export default {
   methods: {
     async loadOrders() {
       try {
-        const res = await getMyOrders(this.userInfo.ownerId, 1)
+        const res = await getMyOrders(1)
         this.orders = res.list || []
       } catch (e) { /* ignore */ }
     },

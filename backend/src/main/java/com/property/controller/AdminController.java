@@ -29,14 +29,19 @@ public class AdminController {
     private final com.property.repository.EmployeeRepository employeeRepository;
     private final com.property.repository.RepairOrderRepository repairOrderRepository;
     private final com.property.repository.VisitorRepository visitorRepository;
+    private final com.property.repository.OwnerRepository ownerRepository;
+    private final com.property.repository.BuildingRepository buildingRepository;
     private final PasswordEncoder passwordEncoder;
 
     // ========== 业主管理 ==========
 
-    @Operation(summary = "业主列表")
+    @Operation(summary = "业主列表（分页）")
     @GetMapping("/owners")
-    public Result<List<Owner>> getOwners() {
-        return Result.success(ownerService.findAll());
+    public Result<PageResult<Owner>> getOwners(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        Page<Owner> result = ownerRepository.findAll(PageRequest.of(page - 1, size));
+        return Result.success(PageResult.of(result, result.getContent()));
     }
 
     @Operation(summary = "业主详情")
@@ -50,6 +55,8 @@ public class AdminController {
     public Result<Owner> createOwner(@RequestBody Owner owner) {
         Owner saved = ownerService.create(owner);
         // 自动创建系统登录账号
+        // TODO: security — default password "123456" should be randomized and
+        // communicated out-of-band (SMS/email). Force password change on first login.
         if (!userRepository.existsByUsername(owner.getPhone())) {
             SysUser user = new SysUser();
             user.setUsername(owner.getPhone());
@@ -78,10 +85,13 @@ public class AdminController {
 
     // ========== 楼栋管理 ==========
 
-    @Operation(summary = "楼栋列表")
+    @Operation(summary = "楼栋列表（分页）")
     @GetMapping("/buildings")
-    public Result<List<Building>> getBuildings() {
-        return Result.success(buildingRoomService.getAllBuildings());
+    public Result<PageResult<Building>> getBuildings(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        Page<Building> result = buildingRepository.findAll(PageRequest.of(page - 1, size));
+        return Result.success(PageResult.of(result, result.getContent()));
     }
 
     @Operation(summary = "新建楼栋")
@@ -118,16 +128,20 @@ public class AdminController {
 
     // ========== 员工管理 ==========
 
-    @Operation(summary = "员工列表")
+    @Operation(summary = "员工列表（分页）")
     @GetMapping("/employees")
-    public Result<List<Employee>> getEmployees() {
-        return Result.success(employeeRepository.findAll());
+    public Result<PageResult<Employee>> getEmployees(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        Page<Employee> result = employeeRepository.findAll(PageRequest.of(page - 1, size));
+        return Result.success(PageResult.of(result, result.getContent()));
     }
 
     @Operation(summary = "新增员工")
     @PostMapping("/employees")
     public Result<Employee> createEmployee(@RequestBody Employee employee) {
         Employee saved = employeeRepository.save(employee);
+        // TODO: security — same default-password issue as createOwner above.
         if (!userRepository.existsByUsername(employee.getPhone())) {
             SysUser user = new SysUser();
             user.setUsername(employee.getPhone());

@@ -26,10 +26,11 @@ public class RepairController {
     @Operation(summary = "业主获取自己的报修单")
     @GetMapping("/my-orders")
     public Result<PageResult<RepairOrder>> getMyOrders(
-            @RequestParam Long ownerId,
+            @CurrentUser SysUser user,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Page<RepairOrder> result = repairService.getOrdersByOwner(ownerId,
+        // IDOR fix: derive ownerId from authenticated user, not request param
+        Page<RepairOrder> result = repairService.getOrdersByOwner(user.getOwnerId(),
                 PageRequest.of(page - 1, size));
         return Result.success(PageResult.of(result, result.getContent()));
     }

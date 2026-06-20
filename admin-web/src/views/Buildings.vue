@@ -20,6 +20,15 @@
           </template>
         </el-table-column>
       </el-table>
+      <div style="margin-top: 16px; display: flex; justify-content: flex-end">
+        <el-pagination
+          v-model:current-page="bldPage"
+          :page-size="bldSize"
+          :total="bldTotal"
+          layout="total, prev, pager, next"
+          @current-change="loadBuildings"
+        />
+      </div>
     </el-card>
 
     <!-- 房间列表 -->
@@ -90,6 +99,9 @@ import { ElMessage } from 'element-plus'
 import { getBuildings, createBuilding, updateBuilding, getRooms, createRoom, updateRoom } from '../api/admin'
 
 const buildings = ref([])
+const bldPage = ref(1)
+const bldSize = ref(20)
+const bldTotal = ref(0)
 const rooms = ref([])
 const selectedBuilding = ref(null)
 
@@ -101,7 +113,11 @@ const buildingForm = ref({ name: '', address: '', totalFloors: 1, totalRooms: 1 
 const roomForm = ref({ roomNo: '', unitNo: '', floor: 1, area: 0, ownerName: '', ownerPhone: '' })
 
 const loadBuildings = async () => {
-  try { buildings.value = await getBuildings() || [] } catch (e) {}
+  try {
+    const res = await getBuildings(bldPage.value, bldSize.value)
+    buildings.value = res?.list || []
+    bldTotal.value = res?.total || 0
+  } catch (e) {}
 }
 
 const showRooms = async (building) => {

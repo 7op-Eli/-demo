@@ -11,8 +11,6 @@ import java.util.List;
  */
 @Data
 public class PageResult<T> implements Serializable {
-    private int code = 200;
-    private String msg = "success";
     private long total;
     private int page;
     private int size;

@@ -22,6 +22,15 @@
           </template>
         </el-table-column>
       </el-table>
+      <div style="margin-top: 16px; display: flex; justify-content: flex-end">
+        <el-pagination
+          v-model:current-page="empPage"
+          :page-size="empSize"
+          :total="empTotal"
+          layout="total, prev, pager, next"
+          @current-change="loadData"
+        />
+      </div>
     </el-card>
 
     <el-dialog v-model="showDialog" title="新增员工" width="450px">
@@ -46,11 +55,18 @@ import { ElMessage } from 'element-plus'
 import { getEmployees, createEmployee } from '../api/admin'
 
 const employees = ref([])
+const empPage = ref(1)
+const empSize = ref(20)
+const empTotal = ref(0)
 const showDialog = ref(false)
 const form = ref({ name: '', phone: '', position: '', department: '', entryDate: '' })
 
 const loadData = async () => {
-  try { employees.value = await getEmployees() || [] } catch (e) {}
+  try {
+    const res = await getEmployees(empPage.value, empSize.value)
+    employees.value = res?.list || []
+    empTotal.value = res?.total || 0
+  } catch (e) {}
 }
 
 const handleSave = async () => {
