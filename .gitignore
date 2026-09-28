@@ -25,6 +25,13 @@ logs/
 .env
 .env.local
 *.local
+# 本地私有配置（真实数据库密码），example 文件可入库
+backend/src/main/resources/application-local.yml
+
+# ===== AI 工具临时输出 =====
+.reasonix/
+.trae-html-share-packages/
+backend/backend/
 
 # ===== 操作系统 =====
 .DS_Store

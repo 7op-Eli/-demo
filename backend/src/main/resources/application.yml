@@ -4,11 +4,15 @@ server:
     context-path: /api
 
 spring:
+  # 本地私有配置（不入库）：真实数据库密码放在 application-local.yml，
+  # 该文件已被 .gitignore 排除；首次克隆参考 application-local.yml.example 创建
+  config:
+    import: optional:classpath:application-local.yml
   datasource:
-    # 安全要求：数据库凭据走环境变量，开发环境保留默认值便于本地调试
     url: jdbc:mysql://localhost:3306/property?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:REDACTED}
+    # 严禁写默认密码：本地开发用 application-local.yml 提供，部署用 DB_PASSWORD 环境变量
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       minimum-idle: 5

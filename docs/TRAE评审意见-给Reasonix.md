@@ -77,10 +77,11 @@ TRAE 共改动 **14 个文件**（含 3 个新增文件），涉及后端、admi
 
 ### 2.4 application.yml 密钥走环境变量（H6）
 
-**改了什么**：`password: REDACTED` → `${DB_PASSWORD:REDACTED}`，`username: root` → `${DB_USERNAME:root}`，JWT secret → `${JWT_SECRET:...}`。
+**改了什么**：`password: ***`（原为明文密码，已脱敏）→ `${DB_PASSWORD:***}`，`username: root` → `${DB_USERNAME:root}`，JWT secret → `${JWT_SECRET:...}`。
 
 **待审点**：
-- 开发环境保留默认值（`REDACTED`），生产环境不设这些环境变量会怎样？如果生产环境的 `DB_PASSWORD` 环境变量为空，`${DB_PASSWORD:REDACTED}` 会回退到 `REDACTED`——这可能不安全。**建议生产环境不设默认值**（即 `${DB_PASSWORD}` 不带冒号默认值），强制必须配置。但这会影响开发便利性，需要你权衡。
+- 开发环境保留了密码默认值（此处已脱敏），若生产环境不设 `DB_PASSWORD` 环境变量，会回退到该默认值——不安全。**建议生产环境不设默认值**（即 `${DB_PASSWORD}` 不带冒号默认值），强制必须配置。但这会影响开发便利性，需要你权衡。
+  （9/28 后记：本条已落地——默认值彻底移除，本地开发改走不入库的 `application-local.yml`，Git 历史已清洗。）
 
 ### 2.5 admin-web Login.vue 硬编码凭据（A3）
 
@@ -117,7 +118,7 @@ TRAE 共改动 **14 个文件**（含 3 个新增文件），涉及后端、admi
 1. **微信登录正式链路首次绑定方案**（2.1 疑点 1）：正式上线后已登记业主首次微信登录如何绑定 openid？这是上线前必须解决的问题。
 2. **SecurityConfig 返回的 JSON 格式与 Result 类是否一致**（2.3）：手写 JSON 可能与 Jackson 序列化有差异。
 3. **VisitorController.register 加 hasRole('OWNER') 是否影响员工代登记**（2.2）：需确认业务需求。
-4. **application.yml 生产环境是否应去掉默认值**（2.4）：`${DB_PASSWORD:REDACTED}` 在生产环境回退到弱密码的风险。
+4. **application.yml 生产环境是否应去掉默认值**（2.4）：默认值存在时生产环境可能回退到弱密码的风险。（✅ 9/28 已处理：默认值移除，密码改走不入库的本地私有配置）
 5. **miniapp 改动在 HBuilderX 中实际编译**（2.6）：我无法编译验证，需你确认。
 
 ---

@@ -585,7 +585,7 @@
       <details class="issue danger" open>
         <summary><span class="badge danger">🔴 H6</span><span class="title">数据库密码与 JWT 密钥硬编码入库</span><span class="code">application.yml:9</span></summary>
         <div class="body">
-          <p><span class="field-label">问题</span><code class="inline">password: REDACTED</code>、<code class="inline">jwt.secret: PROPERTY_MGMT_SECRET_KEY_2024_...</code> 明文入库到版本库；JWT 密钥约 37 字节，对 HS512 强度不足。</p>
+          <p><span class="field-label">问题</span><code class="inline">password: ***</code>（真实密码，已脱敏）、<code class="inline">jwt.secret: PROPERTY_MGMT_SECRET_KEY_2024-...</code> 明文入库到版本库；JWT 密钥约 37 字节，对 HS512 强度不足。</p>
           <p><span class="field-label">修复</span>改为 <code class="inline">${DB_PASSWORD}</code> / <code class="inline">${JWT_SECRET}</code> 环境变量；JWT 密钥至少 64 字节随机，用 <code class="inline">Keys.hmacShaKeyFor(bytes)</code>。</p>
         </div>
       </details>

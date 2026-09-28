@@ -1,0 +1,5 @@
+# 使用方法：复制本文件为同目录下的 application-local.yml，填入本机数据库密码
+# application-local.yml 已被 .gitignore 排除，不会进入版本库
+spring:
+  datasource:
+    password: 你的本机数据库密码
