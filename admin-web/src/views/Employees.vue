@@ -21,6 +21,12 @@
             </el-tag>
           </template>
         </el-table-column>
+        <el-table-column label="操作" width="200">
+          <template #default="{ row }">
+            <el-button size="small" @click="handleEdit(row)">编辑</el-button>
+            <el-button size="small" type="danger" @click="handleDelete(row)">删除</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <div style="margin-top: 16px; display: flex; justify-content: flex-end">
         <el-pagination
@@ -33,7 +39,7 @@
       </div>
     </el-card>
 
-    <el-dialog v-model="showDialog" title="新增员工" width="450px">
+    <el-dialog v-model="showDialog" :title="editingId ? '编辑员工' : '新增员工'" width="450px">
       <el-form :model="form" label-width="100px">
         <el-form-item label="姓名"><el-input v-model="form.name" /></el-form-item>
         <el-form-item label="电话"><el-input v-model="form.phone" /></el-form-item>
@@ -51,14 +57,15 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import { getEmployees, createEmployee } from '../api/admin'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { getEmployees, createEmployee, updateEmployee, deleteEmployee } from '../api/admin'
 
 const employees = ref([])
 const empPage = ref(1)
 const empSize = ref(20)
 const empTotal = ref(0)
 const showDialog = ref(false)
+const editingId = ref(null)
 const form = ref({ name: '', phone: '', position: '', department: '', entryDate: '' })
 
 const loadData = async () => {
@@ -69,14 +76,34 @@ const loadData = async () => {
   } catch (e) {}
 }
 
+const handleEdit = (row) => {
+  editingId.value = row.id
+  form.value = { ...row }
+  showDialog.value = true
+}
+
 const handleSave = async () => {
   try {
-    await createEmployee(form.value)
-    ElMessage.success('新增成功')
+    if (editingId.value) {
+      await updateEmployee(editingId.value, form.value)
+      ElMessage.success('更新成功')
+    } else {
+      await createEmployee(form.value)
+      ElMessage.success('新增成功')
+    }
     showDialog.value = false
+    editingId.value = null
     form.value = { name: '', phone: '', position: '', department: '', entryDate: '' }
     loadData()
   } catch (e) {}
+}
+
+const handleDelete = (row) => {
+  ElMessageBox.confirm('确定删除该员工吗？').then(async () => {
+    await deleteEmployee(row.id)
+    ElMessage.success('删除成功')
+    loadData()
+  }).catch(() => {})
 }
 
 onMounted(loadData)

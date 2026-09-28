@@ -31,6 +31,8 @@ public class AdminController {
     private final com.property.repository.VisitorRepository visitorRepository;
     private final com.property.repository.OwnerRepository ownerRepository;
     private final com.property.repository.BuildingRepository buildingRepository;
+    private final com.property.repository.GovernmentOfficialRepository governmentOfficialRepository;
+    private final com.property.repository.GovernmentFeedbackRepository governmentFeedbackRepository;
     private final PasswordEncoder passwordEncoder;
 
     // ========== 业主管理 ==========
@@ -153,6 +155,117 @@ public class AdminController {
             userRepository.save(user);
         }
         return Result.success(saved);
+    }
+
+    @Operation(summary = "更新员工")
+    @PutMapping("/employees/{id}")
+    public Result<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employee) {
+        Employee existing = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("员工不存在"));
+        existing.setName(employee.getName());
+        existing.setPhone(employee.getPhone());
+        existing.setPosition(employee.getPosition());
+        existing.setDepartment(employee.getDepartment());
+        existing.setEntryDate(employee.getEntryDate());
+        existing.setStatus(employee.getStatus());
+        return Result.success(employeeRepository.save(existing));
+    }
+
+    @Operation(summary = "删除员工")
+    @DeleteMapping("/employees/{id}")
+    public Result<?> deleteEmployee(@PathVariable Long id) {
+        Employee emp = employeeRepository.findById(id).orElse(null);
+        if (emp != null) {
+            userRepository.findByUsername(emp.getPhone()).ifPresent(u -> {
+                u.setStatus(0);
+                userRepository.save(u);
+            });
+        }
+        employeeRepository.deleteById(id);
+        return Result.success();
+    }
+
+    // ========== 政府人员管理 ==========
+
+    @Operation(summary = "政府人员列表（分页）")
+    @GetMapping("/government-officials")
+    public Result<PageResult<GovernmentOfficial>> getGovernmentOfficials(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        Page<GovernmentOfficial> result = governmentOfficialRepository.findAll(PageRequest.of(page - 1, size));
+        return Result.success(PageResult.of(result, result.getContent()));
+    }
+
+    @Operation(summary = "新增政府人员")
+    @PostMapping("/government-officials")
+    public Result<GovernmentOfficial> createGovernmentOfficial(@RequestBody GovernmentOfficial official) {
+        GovernmentOfficial saved = governmentOfficialRepository.save(official);
+        // 自动创建登录账号
+        if (!userRepository.existsByUsername(official.getPhone())) {
+            SysUser user = new SysUser();
+            user.setUsername(official.getPhone());
+            user.setPassword(passwordEncoder.encode("123456"));
+            user.setRealName(official.getName());
+            user.setPhone(official.getPhone());
+            user.setRoleType(com.property.common.Constants.ROLE_GOVERNMENT);
+            user.setGovernmentOfficialId(saved.getId());
+            userRepository.save(user);
+        }
+        return Result.success(saved);
+    }
+
+    @Operation(summary = "更新政府人员")
+    @PutMapping("/government-officials/{id}")
+    public Result<GovernmentOfficial> updateGovernmentOfficial(@PathVariable Long id,
+                                                                @RequestBody GovernmentOfficial official) {
+        GovernmentOfficial existing = governmentOfficialRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("人员不存在"));
+        existing.setName(official.getName());
+        existing.setPhone(official.getPhone());
+        existing.setDepartment(official.getDepartment());
+        existing.setPosition(official.getPosition());
+        existing.setStatus(official.getStatus());
+        return Result.success(governmentOfficialRepository.save(existing));
+    }
+
+    @Operation(summary = "删除政府人员")
+    @DeleteMapping("/government-officials/{id}")
+    public Result<?> deleteGovernmentOfficial(@PathVariable Long id) {
+        GovernmentOfficial official = governmentOfficialRepository.findById(id).orElse(null);
+        if (official != null) {
+            userRepository.findByUsername(official.getPhone()).ifPresent(u -> {
+                u.setStatus(0);
+                userRepository.save(u);
+            });
+        }
+        governmentOfficialRepository.deleteById(id);
+        return Result.success();
+    }
+
+    // ========== 政府反馈管理 ==========
+
+    @Operation(summary = "政府反馈列表（分页）")
+    @GetMapping("/government-feedbacks")
+    public Result<PageResult<GovernmentFeedback>> getGovernmentFeedbacks(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        Page<GovernmentFeedback> result = governmentFeedbackRepository.findAllByOrderByCreatedAtDesc(
+                PageRequest.of(page - 1, size));
+        return Result.success(PageResult.of(result, result.getContent()));
+    }
+
+    @Operation(summary = "回复政府反馈")
+    @PutMapping("/government-feedbacks/{id}/reply")
+    public Result<GovernmentFeedback> replyGovernmentFeedback(@PathVariable Long id,
+                                                               @RequestBody java.util.Map<String, String> body,
+                                                               @CurrentUser SysUser user) {
+        GovernmentFeedback feedback = governmentFeedbackRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("反馈不存在"));
+        feedback.setReply(body.get("reply"));
+        feedback.setRepliedBy(user.getEmployeeId());
+        feedback.setRepliedAt(java.time.LocalDateTime.now());
+        feedback.setStatus(2); // 已回复
+        return Result.success(governmentFeedbackRepository.save(feedback));
     }
 
     // ========== 仪表盘统计 ==========

@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public Result<?> handleAccessDenied(AccessDeniedException e) {
-        return Result.forbidden("权限不足");
+        return Result.forbidden(e.getMessage() != null ? e.getMessage() : "权限不足");
     }
 
     /** 登录认证失败（密码错误 / 用户不存在 / 账号禁用等）。否则会被下面的兜底 Exception 处理成 500。 */

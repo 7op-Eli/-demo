@@ -6,9 +6,10 @@ package com.property.common;
 public interface Constants {
 
     /* ========== 角色类型 ========== */
-    int ROLE_ADMIN = 3;      // 系统管理员
-    int ROLE_EMPLOYEE = 2;   // 物业员工
-    int ROLE_OWNER = 1;      // 业主
+    int ROLE_ADMIN = 3;         // 系统管理员
+    int ROLE_EMPLOYEE = 2;      // 物业员工
+    int ROLE_OWNER = 1;         // 业主
+    int ROLE_GOVERNMENT = 4;    // 政府人员
 
     /* ========== 用户状态 ========== */
     int USER_STATUS_NORMAL = 1;

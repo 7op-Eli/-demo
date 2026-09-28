@@ -31,7 +31,7 @@ public class NoticeController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
         Page<Notice> result;
-        if (category != null) {
+        if (category != null && !category.isBlank()) {
             result = noticeService.getNoticesByCategory(category,
                     PageRequest.of(page - 1, size));
         } else {
@@ -63,15 +63,15 @@ public class NoticeController {
         return Result.success(noticeService.getReadCount(id));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "发布公告")
+    @PreAuthorize("hasAnyRole('ADMIN','GOVERNMENT')")
+    @Operation(summary = "发布公告（管理员/政府）")
     @PostMapping
     public Result<Notice> createNotice(@RequestBody Notice notice) {
         return Result.success(noticeService.createNotice(notice));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "更新公告")
+    @PreAuthorize("hasAnyRole('ADMIN','GOVERNMENT')")
+    @Operation(summary = "更新公告（管理员/政府）")
     @PutMapping("/{id}")
     public Result<Notice> updateNotice(@PathVariable Long id, @RequestBody Notice notice) {
         return Result.success(noticeService.updateNotice(id, notice));

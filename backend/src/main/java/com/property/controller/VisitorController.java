@@ -47,9 +47,15 @@ public class VisitorController {
         return Result.success(PageResult.of(result, result.getContent()));
     }
 
-    @Operation(summary = "业主登记访客")
+    @PreAuthorize("hasAnyRole('OWNER','EMPLOYEE','ADMIN')")
+    @Operation(summary = "登记访客")
     @PostMapping("/register")
-    public Result<Visitor> register(@RequestBody Visitor visitor) {
+    public Result<Visitor> register(@RequestBody Visitor visitor, @CurrentUser SysUser user) {
+        // IDOR fix: OWNER 角色强制从认证用户取 ownerId；EMPLOYEE/ADMIN 可用前端传参
+        if (user.getRoleType() == com.property.common.Constants.ROLE_OWNER) {
+            visitor.setOwnerId(user.getOwnerId());
+        }
+        visitor.setId(null);
         return Result.success(visitorService.registerVisitor(visitor));
     }
 
@@ -63,8 +69,10 @@ public class VisitorController {
     @PreAuthorize("hasAnyRole('EMPLOYEE','ADMIN')")
     @Operation(summary = "拒绝来访")
     @PutMapping("/{id}/reject")
-    public Result<Visitor> reject(@PathVariable Long id, @RequestParam String remark,
-                                  @CurrentUser SysUser user) {
+    public Result<Visitor> reject(@PathVariable Long id,
+                                   @RequestBody java.util.Map<String, String> body,
+                                   @CurrentUser SysUser user) {
+        String remark = body != null ? body.get("remark") : null;
         return Result.success(visitorService.rejectVisitor(id, user.getEmployeeId(), remark));
     }
 

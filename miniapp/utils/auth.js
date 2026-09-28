@@ -9,7 +9,6 @@ export const login = (token, userInfo) => {
 export const logout = () => {
   uni.removeStorageSync('token')
   uni.removeStorageSync('userInfo')
-  uni.reLaunch({ url: '/pages/login' })
 }
 
 export const getToken = () => uni.getStorageSync('token')

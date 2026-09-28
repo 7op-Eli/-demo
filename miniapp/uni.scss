@@ -1,25 +1,15 @@
-/* 全局样式变量 */
-$primary-color: #2B85E4;
-$success-color: #19BE6B;
-$warning-color: #FF9900;
-$danger-color: #ED3F14;
-$bg-color: #F5F6FA;
-$card-bg: #FFFFFF;
-$text-primary: #333333;
-$text-secondary: #666666;
-$text-light: #999999;
-$border-color: #EEEEEE;
+/* 全局样式（微信小程序仅支持标准 CSS，不使用 SCSS 变量/嵌套） */
 
 /* 通用样式 */
 page {
-  background-color: $bg-color;
+  background-color: #F5F6FA;
   font-size: 28rpx;
-  color: $text-primary;
+  color: #333333;
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
 }
 
 .card {
-  background: $card-bg;
+  background: #FFFFFF;
   border-radius: 16rpx;
   padding: 30rpx;
   margin: 20rpx 30rpx;

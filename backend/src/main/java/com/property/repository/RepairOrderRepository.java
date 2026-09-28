@@ -16,4 +16,7 @@ public interface RepairOrderRepository extends JpaRepository<RepairOrder, Long> 
     Page<RepairOrder> findByCsrIdOrderByCreatedAtDesc(Long csrId, Pageable pageable);
     List<RepairOrder> findByStatusIn(List<Integer> statuses);
     long countByStatus(Integer status);
+
+    /** 已完成的工单，按完成时间倒序（工单展示） */
+    Page<RepairOrder> findByStatusOrderByCompleteTimeDesc(Integer status, Pageable pageable);
 }

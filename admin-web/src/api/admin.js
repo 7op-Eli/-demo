@@ -20,9 +20,24 @@ export const updateRoom = (id, data) => put(`/admin/rooms/${id}`, data)
 // ===== 员工 =====
 export const getEmployees = (page = 1, size = 20) => get('/admin/employees', { page, size })
 export const createEmployee = (data) => post('/admin/employees', data)
+export const updateEmployee = (id, data) => put(`/admin/employees/${id}`, data)
+export const deleteEmployee = (id) => del(`/admin/employees/${id}`)
 
 // ===== 仪表盘 =====
 export const getDashboard = () => get('/admin/dashboard')
+
+// ===== 政府人员 =====
+export const getGovernmentOfficials = (page = 1, size = 20) => get('/admin/government-officials', { page, size })
+export const createGovernmentOfficial = (data) => post('/admin/government-officials', data)
+export const updateGovernmentOfficial = (id, data) => put(`/admin/government-officials/${id}`, data)
+export const deleteGovernmentOfficial = (id) => del(`/admin/government-officials/${id}`)
+
+// ===== 政府反馈 =====
+export const getGovernmentFeedbacks = (page = 1, size = 20) => get('/admin/government-feedbacks', { page, size })
+export const replyGovernmentFeedback = (id, data) => put(`/admin/government-feedbacks/${id}/reply`, data)
+
+// ===== 工单展示 =====
+export const getPublicFeed = (page = 1, size = 20) => get('/repair/orders/public-feed', { page, size })
 
 // ===== 通知 =====
 export const getNotices = (params) => get('/notices', params)

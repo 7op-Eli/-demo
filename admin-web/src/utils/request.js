@@ -33,14 +33,26 @@ request.interceptors.response.use(
     return Promise.reject(new Error(res.msg))
   },
   error => {
-    // 优先展示后端返回的业务提示（如「用户名或密码错误」），否则回退到通用文案
+    const status = error.response && error.response.status
     const res = error.response && error.response.data
-    ElMessage.error((res && res.msg) || error.message || '网络异常')
-    if (error.response && error.response.status === 401) {
+
+    // 401 → 认证失败：清除登录态并跳转登录页
+    if (status === 401) {
       localStorage.removeItem('admin-token')
       localStorage.removeItem('admin-user')
       router.push('/login')
+      ElMessage.error((res && res.msg) || '登录已过期，请重新登录')
+      return Promise.reject(error)
     }
+
+    // 403 → 授权失败：已认证但无权限，不清 token、不跳转
+    if (status === 403) {
+      ElMessage.error((res && res.msg) || '无操作权限')
+      return Promise.reject(error)
+    }
+
+    // 优先展示后端返回的业务提示，否则回退到通用文案
+    ElMessage.error((res && res.msg) || error.message || '网络异常')
     return Promise.reject(error)
   }
 )

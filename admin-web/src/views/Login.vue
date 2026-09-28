@@ -5,10 +5,10 @@
       <p class="login-subtitle">管理员登录</p>
       <el-form :model="form" :rules="rules" ref="formRef" size="large">
         <el-form-item prop="username">
-          <el-input v-model="form.username" placeholder="用户名" prefix-icon="User" />
+          <el-input v-model="form.username" placeholder="用户名" :prefix-icon="User" />
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="form.password" type="password" placeholder="密码" prefix-icon="Lock" show-password />
+          <el-input v-model="form.password" type="password" placeholder="密码" :prefix-icon="Lock" show-password />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="loading" @click="handleLogin" style="width: 100%">
@@ -24,12 +24,16 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { User, Lock } from '@element-plus/icons-vue'
 import { login } from '../api/auth'
 
 const router = useRouter()
 const formRef = ref(null)
 const loading = ref(false)
-const form = reactive({ username: 'admin', password: '123456' })
+const form = reactive({
+  username: import.meta.env.DEV ? 'admin' : '',
+  password: import.meta.env.DEV ? '123456' : ''
+})
 const rules = {
   username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }]

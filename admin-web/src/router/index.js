@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
   {
@@ -19,14 +19,17 @@ const routes = [
       { path: 'fee-items', name: 'FeeItems', component: () => import('../views/FeeItems.vue'), meta: { title: '费用项目' } },
       { path: 'fee-bills', name: 'FeeBills', component: () => import('../views/FeeBills.vue'), meta: { title: '缴费账单' } },
       { path: 'repairs', name: 'Repairs', component: () => import('../views/Repairs.vue'), meta: { title: '报修管理' } },
+      { path: 'work-order-feed', name: 'WorkOrderFeed', component: () => import('../views/WorkOrderFeed.vue'), meta: { title: '工单展示' } },
       { path: 'notices', name: 'Notices', component: () => import('../views/Notices.vue'), meta: { title: '公告管理' } },
+      { path: 'gov-officials', name: 'GovOfficials', component: () => import('../views/GovernmentOfficials.vue'), meta: { title: '政府人员' } },
+      { path: 'gov-feedbacks', name: 'GovFeedbacks', component: () => import('../views/GovernmentFeedbacks.vue'), meta: { title: '政府反馈' } },
       { path: 'convenience', name: 'Convenience', component: () => import('../views/Convenience.vue'), meta: { title: '便民服务' } }
     ]
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes
 })
 

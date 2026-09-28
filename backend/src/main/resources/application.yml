@@ -5,10 +5,10 @@ server:
 
 spring:
   datasource:
-    # TODO: security — move DB credentials to environment variables (e.g. ${DB_USERNAME}, ${DB_PASSWORD})
-    url: jdbc:mysql://localhost:3306/property_management?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: REDACTED
+    # 安全要求：数据库凭据走环境变量，开发环境保留默认值便于本地调试
+    url: jdbc:mysql://localhost:3306/property?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:REDACTED}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       minimum-idle: 5
@@ -46,8 +46,15 @@ spring:
 # TODO: security — move jwt.secret to environment variable (e.g. ${JWT_SECRET})
 # and never commit real secrets to version control.
 jwt:
-  secret: PROPERTY_MGMT_SECRET_KEY_2024_CHANGE_IN_PROD
+  secret: ${JWT_SECRET:PROPERTY_MGMT_SECRET_KEY_2024_CHANGE_IN_PROD}
   expiration: 86400000  # 24小时
+
+# 微信小程序配置
+# 安全要求：生产环境必须通过环境变量注入 WECHAT_APPID / WECHAT_SECRET，严禁写死
+# 开发环境不配置时自动进入 Demo 模式（仅生成独立 demo 账号，碰不到真实数据）
+wechat:
+  appid: ${WECHAT_APPID:}
+  secret: ${WECHAT_SECRET:}
 
 # 文件上传
 file:

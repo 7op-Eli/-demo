@@ -127,8 +127,22 @@ public class RepairService {
 
     @Transactional
     public RepairEvaluation submitEvaluation(RepairEvaluation eval) {
+        // 1. 校验工单归属
+        RepairOrder order = getOrderById(eval.getOrderId());
+        if (!order.getOwnerId().equals(eval.getOwnerId())) {
+            throw new org.springframework.security.access.AccessDeniedException("只能评价自己的工单");
+        }
+        // 2. 校验工单状态：必须已完成或回访中
+        if (order.getStatus() != Constants.REPAIR_COMPLETED
+                && order.getStatus() != Constants.REPAIR_FOLLOW_UP) {
+            throw new com.property.common.BusinessException("工单尚未完成，无法评价");
+        }
+        // 3. 校验无重复评价
+        if (evaluationRepository.findByOrderId(eval.getOrderId()).isPresent()) {
+            throw new com.property.common.BusinessException("该工单已评价");
+        }
+        // 4. 保存评价并结束工单
         RepairEvaluation saved = evaluationRepository.save(eval);
-        // 评价后自动结束工单
         finishOrder(eval.getOrderId());
         return saved;
     }

@@ -22,6 +22,7 @@
           </template>
           <el-menu-item index="/owners">业主管理</el-menu-item>
           <el-menu-item index="/employees">员工管理</el-menu-item>
+          <el-menu-item index="/gov-officials">政府人员</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
@@ -42,9 +43,17 @@
           <el-icon><Tools /></el-icon>
           <span>报修管理</span>
         </el-menu-item>
+        <el-menu-item index="/work-order-feed">
+          <el-icon><DataAnalysis /></el-icon>
+          <span>工单展示</span>
+        </el-menu-item>
         <el-menu-item index="/notices">
           <el-icon><Bell /></el-icon>
           <span>公告管理</span>
+        </el-menu-item>
+        <el-menu-item index="/gov-feedbacks">
+          <el-icon><ChatDotSquare /></el-icon>
+          <span>政府反馈</span>
         </el-menu-item>
         <el-menu-item index="/convenience">
           <el-icon><Service /></el-icon>

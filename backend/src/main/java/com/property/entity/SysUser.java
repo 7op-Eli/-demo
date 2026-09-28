@@ -51,6 +51,9 @@ public class SysUser implements UserDetails {
     @Column(name = "employee_id")
     private Long employeeId;
 
+    @Column(name = "government_official_id")
+    private Long governmentOfficialId;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -80,6 +83,9 @@ public class SysUser implements UserDetails {
                 break;
             case Constants.ROLE_EMPLOYEE:
                 role = "ROLE_EMPLOYEE";
+                break;
+            case Constants.ROLE_GOVERNMENT:
+                role = "ROLE_GOVERNMENT";
                 break;
             default:
                 role = "ROLE_OWNER";
@@ -117,6 +123,7 @@ public class SysUser implements UserDetails {
             case Constants.ROLE_ADMIN: return "管理员";
             case Constants.ROLE_EMPLOYEE: return "员工";
             case Constants.ROLE_OWNER: return "业主";
+            case Constants.ROLE_GOVERNMENT: return "政府人员";
             default: return "未知";
         }
     }

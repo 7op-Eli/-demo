@@ -10,7 +10,7 @@
     </view>
 
     <!-- 列表 -->
-    <view class="card" v-for="item in notices" :key="item.id" @click="showDetail(item)">
+    <view class="card" v-for="item in notices" :key="item.id" @click="openDetail(item)">
       <view class="notice-header">
         <text class="notice-tag tag" :class="catClass(item.category)">{{ catLabel(item.category) }}</text>
         <text class="notice-top" v-if="item.topStatus === 1">置顶</text>
@@ -25,13 +25,13 @@
     <view v-if="notices.length === 0" class="empty">暂无公告</view>
 
     <!-- 详情弹窗 -->
-    <uni-popup ref="popup" type="center">
-      <view class="detail-modal">
+    <view class="detail-overlay" v-if="detailVisible" @click="detailVisible = false">
+      <view class="detail-modal" @click.stop>
         <text class="detail-title">{{ detail.title }}</text>
         <text class="detail-content">{{ detail.content }}</text>
-        <button class="close-btn" @click="$refs.popup.close()">关闭</button>
+        <button class="close-btn" @click="detailVisible = false">关闭</button>
       </view>
-    </uni-popup>
+    </view>
   </view>
 </template>
 
@@ -50,7 +50,15 @@ export default {
         { key: 'emergency', label: '紧急通知' }
       ],
       notices: [],
-      detail: {}
+      detail: {},
+      detailVisible: false,
+      pendingNoticeId: null
+    }
+  },
+  onLoad(options) {
+    // 支持从首页点击「更多 >」跳转后定位到指定公告
+    if (options && options.noticeId) {
+      this.pendingNoticeId = options.noticeId
     }
   },
   onShow() { this.loadNotices() },
@@ -59,13 +67,19 @@ export default {
       try {
         const cat = this.currentTab === 'all' ? null : this.currentTab
         const res = await getNotices(cat, 1)
-        this.notices = res.list || []
-      } catch (e) { /* ignore */ }
+        this.notices = (res && res.list) || []
+        // 如果有待定位的公告，自动弹出详情
+        if (this.pendingNoticeId) {
+          const target = this.notices.find(n => String(n.id) === String(this.pendingNoticeId))
+          if (target) { this.openDetail(target) }
+          this.pendingNoticeId = null
+        }
+      } catch (e) { console.error('loadNotices:', e) }
     },
     switchTab(key) { this.currentTab = key; this.loadNotices() },
-    showDetail(item) {
+    openDetail(item) {
       this.detail = item
-      this.$refs.popup.open()
+      this.detailVisible = true
     },
     catClass(c) {
       const map = { 'government':'tag-red', 'law':'tag-orange', 'community':'tag-blue', 'emergency':'tag-red' }
@@ -98,5 +112,9 @@ export default {
 }
 .detail-title { font-size: 34rpx; font-weight: bold; display: block; margin-bottom: 24rpx; }
 .detail-content { font-size: 28rpx; color: #333; line-height: 1.7; display: block; }
+.detail-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 999;
+}
 .close-btn { margin-top: 30rpx; width: 100%; background: #2B85E4; color: #fff; border: none; border-radius: 40rpx; padding: 20rpx; text-align: center; }
 </style>

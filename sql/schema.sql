@@ -1,11 +1,11 @@
 -- ============================================================
 -- 物业管理系统 数据库建表脚本
--- 数据库: property_management
+-- 数据库: property
 -- 字符集: utf8mb4
 -- ============================================================
 
-CREATE DATABASE IF NOT EXISTS `property_management` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `property_management`;
+CREATE DATABASE IF NOT EXISTS `property` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `property`;
 
 -- ============================================================
 -- 1. 系统管理模块
@@ -19,10 +19,11 @@ CREATE TABLE `sys_user` (
   `real_name` VARCHAR(50) DEFAULT NULL COMMENT '真实姓名',
   `phone` VARCHAR(20) DEFAULT NULL COMMENT '手机号',
   `avatar` VARCHAR(500) DEFAULT NULL COMMENT '头像URL',
-  `role_type` TINYINT NOT NULL COMMENT '角色类型: 1=业主 2=员工 3=管理员',
+  `role_type` TINYINT NOT NULL COMMENT '角色类型: 1=业主 2=员工 3=管理员 4=政府人员',
   `status` TINYINT DEFAULT 1 COMMENT '状态: 1=启用 0=禁用',
   `owner_id` BIGINT DEFAULT NULL COMMENT '关联业主ID',
   `employee_id` BIGINT DEFAULT NULL COMMENT '关联员工ID',
+  `government_official_id` BIGINT DEFAULT NULL COMMENT '关联政府人员ID',
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -242,6 +243,7 @@ CREATE TABLE `property_fee_bill` (
   `remark` VARCHAR(500) DEFAULT NULL COMMENT '备注',
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `version` BIGINT DEFAULT 0 COMMENT '乐观锁版本号',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_bill_no` (`bill_no`),
   KEY `idx_owner_id` (`owner_id`),
@@ -329,7 +331,7 @@ CREATE TABLE `repair_evaluation` (
   `is_anonymous` TINYINT DEFAULT 0 COMMENT '是否匿名: 0=公开 1=匿名',
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `idx_order_id` (`order_id`),
+  UNIQUE KEY `uk_order_id` (`order_id`),
   KEY `idx_owner_id` (`owner_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='报修评价表';
 
@@ -557,6 +559,44 @@ CREATE TABLE `mall_order_item` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商城-订单明细表';
 
 -- ============================================================
+-- 10. 政府端模块
+-- ============================================================
+
+-- 政府人员表
+CREATE TABLE `government_official` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '人员ID',
+  `user_id` BIGINT DEFAULT NULL COMMENT '关联系统用户ID',
+  `name` VARCHAR(50) NOT NULL COMMENT '姓名',
+  `phone` VARCHAR(20) NOT NULL COMMENT '联系电话',
+  `department` VARCHAR(100) DEFAULT NULL COMMENT '所属部门',
+  `position` VARCHAR(100) DEFAULT NULL COMMENT '职位',
+  `status` TINYINT DEFAULT 1 COMMENT '状态: 1=在职 0=离职',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_phone` (`phone`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='政府人员表';
+
+-- 政府反馈表
+CREATE TABLE `government_feedback` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '反馈ID',
+  `official_id` BIGINT NOT NULL COMMENT '政府人员ID',
+  `title` VARCHAR(200) NOT NULL COMMENT '反馈标题',
+  `content` TEXT NOT NULL COMMENT '反馈内容',
+  `image_urls` JSON DEFAULT NULL COMMENT '图片URL数组',
+  `status` TINYINT DEFAULT 0 COMMENT '状态: 0=待处理 1=处理中 2=已回复 3=已关闭',
+  `reply` TEXT DEFAULT NULL COMMENT '物业回复',
+  `replied_by` BIGINT DEFAULT NULL COMMENT '回复人（员工ID）',
+  `replied_at` DATETIME DEFAULT NULL COMMENT '回复时间',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_official_id` (`official_id`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='政府反馈表';
+
+-- ============================================================
 -- 初始化数据
 -- ============================================================
 
@@ -564,8 +604,15 @@ CREATE TABLE `mall_order_item` (
 INSERT INTO `sys_role` (`name`, `code`, `description`) VALUES
 ('业主', 'OWNER', '小区业主'),
 ('物业员工', 'EMPLOYEE', '物业公司员工'),
-('系统管理员', 'ADMIN', '系统管理员');
+('系统管理员', 'ADMIN', '系统管理员'),
+('政府人员', 'GOVERNMENT', '政府部门工作人员');
 
 -- 默认管理员账号 (密码: admin123)
 INSERT INTO `sys_user` (`username`, `password`, `real_name`, `role_type`, `status`) VALUES
 ('admin', '$2a$10$Bu1o08vpQfeg9j7dv7YL/.mju334e1qbXuP8sUZBOpfdhiB1aOVU6', '系统管理员', 3, 1);
+
+-- 示例政府人员 (密码: gov123)
+INSERT INTO `government_official` (`name`, `phone`, `department`, `position`, `status`) VALUES
+('王主任', '13900000001', '街道办', '主任', 1);
+INSERT INTO `sys_user` (`username`, `password`, `real_name`, `role_type`, `status`) VALUES
+('13900000001', '$2a$10$Bu1o08vpQfeg9j7dv7YL/.mju334e1qbXuP8sUZBOpfdhiB1aOVU6', '王主任', 4, 1);

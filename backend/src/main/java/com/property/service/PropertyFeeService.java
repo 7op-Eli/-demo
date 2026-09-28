@@ -48,6 +48,11 @@ public class PropertyFeeService {
 
     // ========== 账单管理 ==========
 
+    public PropertyFeeBill getBillById(Long id) {
+        return billRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("账单不存在"));
+    }
+
     public Page<PropertyFeeBill> getBillsByOwner(Long ownerId, Pageable pageable) {
         return billRepository.findByOwnerIdOrderByCreatedAtDesc(ownerId, pageable);
     }
@@ -67,7 +72,8 @@ public class PropertyFeeService {
         PropertyFeeBill bill = billRepository.findById(billId)
                 .orElseThrow(() -> new RuntimeException("账单不存在"));
 
-        BigDecimal newPaid = bill.getPaidAmount().add(amount);
+        BigDecimal paid = bill.getPaidAmount() != null ? bill.getPaidAmount() : BigDecimal.ZERO;
+        BigDecimal newPaid = paid.add(amount);
         bill.setPaidAmount(newPaid);
 
         if (newPaid.compareTo(bill.getAmount()) >= 0) {

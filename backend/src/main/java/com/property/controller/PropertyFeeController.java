@@ -49,6 +49,7 @@ public class PropertyFeeController {
     // ========== 账单 ==========
 
     @Operation(summary = "获取业主账单")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE','OWNER')")
     @GetMapping("/bills")
     public Result<PageResult<PropertyFeeBill>> getBills(
             @CurrentUser SysUser user,
@@ -85,12 +86,34 @@ public class PropertyFeeController {
             @RequestParam BigDecimal amount,
             @RequestParam Integer payMethod,
             @CurrentUser SysUser user) {
+        // 1. 金额必须大于0
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new com.property.common.BusinessException("缴费金额必须大于0");
+        }
+        // 2. 校验账单归属：业主只能缴自己的账单
+        PropertyFeeBill bill = feeService.getBillById(id);
+        if (user.getRoleType() == com.property.common.Constants.ROLE_OWNER
+                && !bill.getOwnerId().equals(user.getOwnerId())) {
+            throw new org.springframework.security.access.AccessDeniedException("无权操作此账单");
+        }
+        // 3. 缴费金额不能超过欠款
+        BigDecimal paid = bill.getPaidAmount() != null ? bill.getPaidAmount() : BigDecimal.ZERO;
+        BigDecimal remaining = bill.getAmount().subtract(paid);
+        if (amount.compareTo(remaining) > 0) {
+            throw new com.property.common.BusinessException("缴费金额不能超过欠款金额");
+        }
         return Result.success(feeService.payBill(id, amount, payMethod, user.getId()));
     }
 
     @Operation(summary = "获取支付记录")
     @GetMapping("/bills/{id}/payments")
-    public Result<List<PaymentRecord>> getPayments(@PathVariable Long id) {
+    public Result<List<PaymentRecord>> getPayments(@PathVariable Long id, @CurrentUser SysUser user) {
+        // 归属校验：业主只能看自己的账单记录，员工/管理员可看全部
+        PropertyFeeBill bill = feeService.getBillById(id);
+        if (user.getRoleType() == com.property.common.Constants.ROLE_OWNER
+                && !bill.getOwnerId().equals(user.getOwnerId())) {
+            throw new org.springframework.security.access.AccessDeniedException("无权查看此账单记录");
+        }
         return Result.success(feeService.getPaymentRecords(id));
     }
 }
